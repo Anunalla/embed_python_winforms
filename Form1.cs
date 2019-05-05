@@ -16,8 +16,8 @@ namespace WindowsFormsApp1
     {
 
         
-        private dynamic my_data = null;
-        private dynamic numpy_lib = null;
+        private dynamic my_data = null;  // object to store the data read from the file opened
+        private dynamic numpy_lib = null; // object to hold the imported Numpy Library
 
         public Form1()
         {
@@ -27,6 +27,7 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             
+            // import Numpy when form is loaded
             using (Py.GIL())
             {
                 numpy_lib = Py.Import("numpy");
@@ -41,6 +42,9 @@ namespace WindowsFormsApp1
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            // opens file explorer and allows selection of .npy file 
+            
             OpenFileDialog openFileDialog1 = new OpenFileDialog
             {
                 InitialDirectory = @"D:\",
@@ -58,6 +62,9 @@ namespace WindowsFormsApp1
                 ShowReadOnly = true
             };
 
+            // when a .npy file is selected, use python to read the files
+           
+
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 String select_file = openFileDialog1.FileName;
@@ -65,40 +72,14 @@ namespace WindowsFormsApp1
                 {
 
 
-                    my_data = numpy_lib.load(select_file);
-                    Console.WriteLine(my_data);
+                    my_data = numpy_lib.load(select_file);  // read the file's data
+                    Console.WriteLine(my_data);  // print data to console
+                    // TODO: Insert a data viewer table to the form to display the data.
 
                 }
                 
-                Console.WriteLine(select_file);
+                Console.WriteLine(select_file); // print the file's path to console (for debugging purposes)
             }
         }
-
-        /*
-
-        private String CreatePyScript(String fileName)
-        {
-            String result = "";
-            string[] lines =
-            {
-                @"import numpy as np",
-                @"def read_file(fileName):",
-                @"  data = np.load(fileName)",
-                @"  return data",
-                @"",
-            };
-            result = String.Join("\r", lines);
-            return result;
-        }
-
-        
-
-        private Double execute_python_inline(String my_code)
-        {
-            ScriptSource source = pyEngine.CreateScriptSourceFromString(my_code, SourceCodeKind.Statements);
-            CompiledCode compiled = source.Compile();
-            Double py_result = compiled.Execute(pyScope);
-            return py_result;
-        }*/
     }
 }
